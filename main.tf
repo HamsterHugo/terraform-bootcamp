@@ -53,3 +53,38 @@ resource "aws_route_table_association" "public_assoc" {
   subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.public_rt.id
 }
+
+resource "aws_security_group" "web_sg" {
+  name        = "Terraform-Web-SG"
+  description = "Allow SSh"
+  vpc_id      = aws_vpc.lab_vpc.id
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # for production use your public IP instead
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"] # for production use your public IP instead
+  }
+  tags = {
+    Name = "Terraform-Weg-SG"
+  }
+}
+
+resource "aws_instance" "web_server" {
+  ami           = ami-0fd6240f599091088
+  instance_type = "t2.micro"
+  subnet_id     = aws_subnet.public_subnet.id
+  vpc_security_group_ids = [
+    aws_security_group.web_sg.id
+  ]
+  associate_public_ip_address = true
+  key_name                    = "MyKeyPair"
+  tags = {
+    Name = "Terraform-Web-Server"
+  }
+}
