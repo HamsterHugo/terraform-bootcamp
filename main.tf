@@ -28,3 +28,10 @@ resource "aws_subnet" "public_subnet" {
         Name = "Terraform-Public-Subnet"
     }
 }
+
+resource "aws_internet_gateway" "igw" {
+    vpc_id = aws_vpc.lab_vpc.id
+    tags = {
+        Name = "Terraform-IGW"
+    }
+}
