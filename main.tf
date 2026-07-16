@@ -35,3 +35,10 @@ resource "aws_internet_gateway" "igw" {
         Name = "Terraform-IGW"
     }
 }
+
+resource "aws_route_table" "public_rt" {
+    vpc_id = aws_vpc.lab_vpc.id
+    tags = {
+        Name = "Terraform-Public-RT"
+    }
+}
